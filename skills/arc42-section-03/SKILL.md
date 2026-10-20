@@ -1,160 +1,119 @@
 ---
 name: arc42-section-03
-version: 1.0.0
-description: Interactively guides the documentation of arc42 Section 3 (Context and Scope). Asks about system boundaries, external actors, and data flows before generating a context diagram and interface table. Iterates until the user is satisfied.
+version: 2.0.0
+description:
+  Interactively guides the documentation of arc42 Section 3 (Context and Scope)
+  in the form of the official arc42 template. Asks about communication partners,
+  domain inputs and outputs, and channels before drafting the business and
+  technical context, then iterates until the user is satisfied.
 ---
 
 # arc42 Section 3: Context and Scope
 
-You are an expert arc42 architect helping document **Section 3: Context and Scope**.
+You help document Section 3 of an arc42 architecture documentation. Follow the
+official template at <https://docs.arc42.org/section-3/>.
 
-This section defines the system boundary — what is inside your system and what is outside. It is often the single most important diagram in the entire documentation.
+Section 3 delimits the system (the scope) from all its communication partners,
+that is neighbouring systems and users (the context), and thereby specifies the
+external interfaces. Where necessary it differentiates the business context
+(domain-specific inputs and outputs) from the technical context (channels,
+protocols, hardware). The domain and technical interfaces to communication
+partners are among the most critical aspects of a system.
 
-**Key distinction:** Business context shows WHAT is communicated (domain perspective). Technical context shows HOW it is communicated (protocols, formats). Never mix the two in the same diagram.
+## Step 1: Ask Before Writing
 
-**Most common mistake:** Showing internal components in the context diagram. The context diagram contains ONLY your system (as a single box) and external entities. Anything inside your system belongs in Section 5.
+Do not draft anything until the questions below are answered.
 
----
+First check which other sections exist. Section 5 Level 1 must show the same
+external interfaces as this section, and Section 7 is where a detailed technical
+context may be deferred to.
 
-## Step 1 — Ask These Questions First
+1. System name. What is the system called? It appears as one black box.
+2. Communication partners. Which users and roles, and which neighbouring
+   systems, exchange anything with the system? Ask for all of them, including
+   scheduled jobs, monitoring, data imports and exports, and external influences
+   such as regulations. If there are many partners, ask for criteria to cluster
+   them.
+3. Domain inputs and outputs. For each partner: which domain-specific data or
+   events go into the system and which come out? Optionally domain-specific
+   formats or protocols. Ask for data flows, not dependencies.
+4. Technical context. Is a technical context needed? It is when hardware,
+   channels or protocols are central to the system or decided by infrastructure
+   stakeholders. If so: for each partner, which channel or transmission medium
+   (network, protocol, device, file transfer) carries the inputs and outputs?
+   Otherwise the technical details may be deferred to Section 7.
+5. Risks and quality requirements at the interfaces. Are there interfaces with
+   known problems, or quality requirements that only apply at one interface?
 
-**Do not generate any documentation yet.** Ask all questions below and wait for the answers.
+## Step 2: Draft the Section
 
-**Context check — ask first:**
-- Does Section 1 already exist? If yes, the stakeholders listed in Section 1.3 should map to external actors here — check for consistency.
-- Does Section 5 already exist? If yes, the external interfaces documented here MUST match the Level-1 building block view exactly — this is the most critical consistency rule in arc42.
-
-**Then ask:**
-
-1. **System name** — What is the system called?
-
-2. **External human actors** — Who are the human users or roles that interact directly with the system? (e.g. end users, administrators, operators, auditors)
-
-3. **External non-human actors** — What non-human actors interact with the system? Prompt explicitly for:
-   - External software systems (upstream and downstream)
-   - Scheduled jobs or batch processes that trigger or consume the system
-   - Monitoring or alerting systems
-   - External event publishers or message brokers
-
-4. **Data flows** — For each external partner identified in questions 2 and 3: what data or events go IN to your system, and what goes OUT? If a partner only sends or only receives, make that explicit.
-
-5. **System boundary** — What is explicitly NOT part of this system, even if closely related? Are there neighboring systems that users might assume are included?
-
-6. **Technical context** — Is a technical context needed? Recommend yes if any of these apply:
-   - Different interfaces use meaningfully different protocols or formats
-   - The technology choices are not obvious from the business context
-   - The documentation is THOROUGH level
-   - External teams will implement against these interfaces
-
-   If yes: what are the protocols, formats, endpoints, and authentication methods per interface?
-
-7. **Detail level** — LEAN, ESSENTIAL, or THOROUGH?
-   - **LEAN:** context diagram + external interfaces table only
-   - **ESSENTIAL:** adds per-interface detail descriptions
-   - **THOROUGH:** adds technical context and maps each business interface to its technical implementation
-
----
-
-## Step 2 — Generate the Documentation
-
-Once all answers are in, produce Section 3. Always include the business context. Add technical context only if confirmed in question 6.
-
-**Business context diagram file** — write to `docs/diagrams/context-business.puml`. Do not include this source in the section markdown; only the image reference belongs there.
-
-```plantuml
-@startuml context-business
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
-
-title System Context: [System Name]
-
-Person(actorA, "Actor A", "Brief description")
-System(system, "[System Name]", "Brief system description")
-System_Ext(systemB, "System B", "Brief description")
-System_Ext(systemC, "System C", "Brief description")
-
-Rel(actorA, system, "Uses", "[data exchanged]")
-Rel(system, systemB, "Calls", "[data exchanged]")
-Rel(systemC, system, "Sends events to", "[data exchanged]")
-
-@enduml
-```
-
-> Generate using the actual system name and actors from the user's answers. The system must appear as a single `System()` element — no internal components. If `docs/diagrams/` does not yet exist, instruct the user to create it.
+Produce the section in the arc42 form: a context diagram that shows the system
+as a black box, and a table of communication partners with their inputs and
+outputs. Use any notation the stakeholders read; arc42 prescribes none. If you
+generate a diagram as text, such as PlantUML, store it in its own file and
+reference it from the section.
 
 ```markdown
 # 3. Context and Scope
 
 ## 3.1 Business Context
 
-[1–2 sentences: What is the system's role in its environment? Who and what does it interact with?]
+[Diagram: the system as a single black box, its communication partners, and the
+domain-specific inputs and outputs between them.]
 
-### Context Diagram
+[System name]
 
-![Business Context](diagrams/context-business.puml)
+| Communication Partner | Inputs              | Outputs              |
+| --------------------- | ------------------- | -------------------- |
+| [User or system]      | [Data or events in] | [Data or events out] |
 
-### External Interfaces
-
-| Interface ID | Partner | What Goes In (to system) | What Goes Out (from system) |
-|-------------|---------|--------------------------|----------------------------|
-| IF-01 | [Partner] | [Business data/events received] | [Business data/events sent] |
-| IF-02 | [Partner] | [Business data/events received] | [Business data/events sent] |
-
-<!-- LEAN: stop here. ESSENTIAL+: add interface detail descriptions below. -->
-
-### Interface Details
-
-<!-- ESSENTIAL and THOROUGH only -->
-
-#### IF-01: [Interface Name]
-**Partner:** [External entity]
-**Purpose:** [Why this interface exists]
-**Input:** [Business objects or events received]
-**Output:** [Business objects or events sent]
-
----
+[Optional: explanation of the external domain interfaces.]
 
 ## 3.2 Technical Context
 
-<!-- Include only if confirmed in Step 1, question 6 -->
-<!-- THOROUGH: map every business interface to its technical implementation -->
+[Diagram, for example a UML deployment diagram, showing the channels and
+transmission media that link the system to its environment.]
 
-[1–2 sentences on how the business interfaces are realised technically]
+[Optional: explanation of the technical interfaces.]
 
-### Technical Interface Details
+Mapping of input and output to channels:
 
-| Interface ID | Technology | Protocol | Format | Endpoint / Port | Authentication |
-|-------------|-----------|----------|--------|-----------------|----------------|
-| IF-01 | [Tech] | [Protocol] | [Format] | [URL/port] | [Auth method] |
-| IF-02 | [Tech] | [Protocol] | [Format] | [URL/port] | [Auth method] |
+| Input/Output | Channel                    |
+| ------------ | -------------------------- |
+| [I/O]        | [Protocol, medium, device] |
 ```
 
----
+Leave out 3.2 when no technical context is needed.
 
-## Step 3 — Review and Iterate
+## Step 3: Review and Iterate
 
-After presenting the draft, work through this checklist. For any item that fails, tell the user what is wrong and what to do — do not just flag it silently.
+Check the draft against the arc42 guidance. For every failed item, explain what
+is wrong and how to fix it.
 
-**Context diagram:**
-- [ ] System is shown as a single element with no internal components visible → if internal components appear, move them to Section 5 and redraw the diagram
-- [ ] Every external actor from questions 2 and 3 appears in the diagram → if any are missing, add them
-- [ ] All arrows have direction and a brief data label → if any are unlabelled, ask the user what is exchanged
-- [ ] System boundary is unambiguous — clear what is inside vs. outside
+Business context:
 
-**Business context:**
-- [ ] No technical details in the business context (no protocols, ports, or formats) → if present, move them to Section 3.2
-- [ ] Data flow direction is explicit for every interface — one-way or bidirectional is stated
+- Is the system shown as one black box without internal building blocks? Those
+  belong in Section 5.
+- Are all communication partners shown? Missing partners mean missing
+  interfaces.
+- Does the diagram come with a table of partners, inputs and outputs?
+- Does the business context show data flows rather than technical details?
+- Is the context an overview? Details of each interface do not belong here.
 
-**Cross-section consistency (if other sections exist):**
-- [ ] Section 1.3 stakeholders map to external actors here → if a stakeholder has no corresponding actor, ask the user whether they interact with the system directly
-- [ ] Section 5.1 Level-1 external interfaces match exactly → if there is a mismatch, one of the two sections must be corrected; ask the user which is authoritative
-- [ ] Section 6 runtime scenarios only involve actors that appear here → flag any that don't
+Technical context, when present:
 
-**Technical context (if included):**
-- [ ] Every business interface in the table has a corresponding technical entry
-- [ ] No new interfaces introduced that are not in the business context
+- Are channels, transmission media and protocols named?
+- Is every domain input and output mapped to a channel?
+- Would the stakeholders be better served by deferring these details to the
+  deployment view in Section 7?
 
-Then ask: **"What would you like to refine or expand?"** and iterate until the user is satisfied.
+Cross-section consistency, where the sections exist:
 
----
+- The external interfaces of Section 5 Level 1 must match the partners here.
+- Section 6 runtime scenarios may only involve partners that appear here.
+- Section 7 zooms into the infrastructure shown as one black box in 3.2.
 
-*Based on [docs.arc42.org/section-3](https://docs.arc42.org/section-3/)*
+Then ask what the user wants to refine and iterate until they are satisfied.
+
+Based on <https://docs.arc42.org/section-3/> and the arc42 template by Dr. Gernot
+Starke and Dr. Peter Hruschka (CC BY-SA 4.0).

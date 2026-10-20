@@ -1,152 +1,133 @@
 ---
 name: arc42-section-01
-version: 1.0.1
-description: Interactively guides the documentation of arc42 Section 1 (Introduction and Goals). Asks targeted questions about the system, quality goals, and stakeholders before generating a structured draft. Iterates until the user is satisfied.
+version: 2.0.0
+description:
+  Interactively guides the documentation of arc42 Section 1 (Introduction and
+  Goals) in the form of the official arc42 template. Asks about requirements,
+  quality goals and stakeholders before drafting, then iterates until the user
+  is satisfied.
 ---
 
 # arc42 Section 1: Introduction and Goals
 
-You are an expert arc42 architect helping document **Section 1: Introduction and Goals**.
+You help document Section 1 of an arc42 architecture documentation. Follow the
+official template at <https://docs.arc42.org/section-1/>.
 
-This section is the entry point to all architecture documentation. It answers: *Why does this system exist? What matters most? Who cares?*
+Section 1 describes the requirements and driving forces that the architects and
+the development team must consider:
 
-**Critical rule:** Quality goals (1.2) are MANDATORY at every detail level — never skip them and never start architecture work without written, agreed quality goals.
+- underlying business goals, essential features and essential functional
+  requirements
+- quality goals for the architecture
+- relevant stakeholders and their expectations
 
----
+arc42 splits the section into 1.1 Requirements Overview, 1.2 Quality Goals and
+1.3 Stakeholders. All parts of arc42 are optional; use what the stakeholders
+need.
 
-## Step 1 — Ask These Questions First
+## Step 1: Ask Before Writing
 
-**Do not generate any documentation yet.** Ask all questions below and wait for the answers. If any answer is vague (especially for quality goals), ask a follow-up to make it concrete *before* moving to Step 2.
+Do not draft anything until the questions below are answered. Ask follow-up
+questions when an answer is vague, in particular for quality goals.
 
-**Context check — ask first:**
-- Do any other arc42 sections already exist for this system? (e.g. Section 3 context, Section 9 decisions) If yes, note them — they will inform the quality goals and stakeholder list.
+First check which other sections already exist, in particular Section 10
+(Quality Requirements) and Section 3 (Context and Scope), and read them.
 
-**Then ask:**
+1. System and business goals. What is the system called? Which business activity
+   does it support or improve, and why is it being created or changed?
+2. Essential features and functional requirements. Which tasks and use cases are
+   essential? Group related requirements when there are many. Does a
+   requirements document, backlog or specification exist? If so, record its
+   name, version and where to find it.
+3. Quality goals for the architecture. Which three, and at most five, quality
+   goals matter most to the major stakeholders? Ask for architecture quality
+   goals, not project goals such as deadlines or budget. For each goal ask for a
+   concrete scenario that shows what the goal means, and for its priority. Offer
+   the ISO 25010:2023 categories or the arc42 quality model
+   (<https://quality.arc42.org>) as a checklist if the user struggles. If no
+   stakeholder can state quality goals, agree on explicit assumptions and mark
+   them as assumptions.
+4. Stakeholders. Which persons, roles or organizations should know the
+   architecture, have to be convinced of it, work with it or with the code, need
+   its documentation, or decide about the system? For each: a contact and what
+   they expect from the architecture and its documentation. Search broadly:
+   operations, support, testers, auditors and neighbouring teams are often
+   forgotten. If management already maintains a stakeholder table, link to it
+   instead of duplicating it.
 
-1. **System name and purpose** — What is the system called, and in one or two sentences, what does it do?
+## Step 2: Draft the Section
 
-2. **Business problem** — What real-world problem does it solve? Who benefits?
-
-3. **Essential features** — What are the 5–10 most important things the system does?
-
-4. **Quality goals** — What are the 3–5 most important quality properties for this system?
-
-   Use the Q42 properties to guide the conversation:
-   - `#reliable` — availability, fault tolerance, data accuracy
-   - `#flexible` — maintainability, extensibility, portability
-   - `#efficient` — response time, throughput, resource usage
-   - `#usable` — learnability, operability, accessibility
-   - `#safe` — fail-safe behavior, risk minimization
-   - `#secure` — confidentiality, integrity, authentication
-   - `#suitable` — functional completeness, testability
-   - `#operable` — deployability, monitorability, installability
-
-   For each goal the user names: **if they do not provide a concrete, measurable scenario with specific numbers, ask them to provide one before continuing.** Do not accept "fast", "reliable", or "secure" without a metric.
-
-   Examples of what to push for:
-   - ❌ "The system should be fast" → ✅ "API responds in < 200ms at p95 under 1000 concurrent users"
-   - ❌ "It should be reliable" → ✅ "99.9% uptime, max 8.76 hours downtime per year"
-
-5. **Stakeholder sign-off** — Who are the key stakeholders? (e.g. dev team, product owner, ops, auditors, end users, management) For each group: what do they need from this documentation, and who specifically will sign off on the quality goals?
-
-6. **Existing requirements** — Is there a requirements document, backlog, or spec to reference? Name or link it if so.
-
-7. **Detail level** — LEAN, ESSENTIAL, or THOROUGH?
-   - **LEAN:** quality goals (mandatory) + brief features list + stakeholder table
-   - **ESSENTIAL:** adds requirements overview with business context and references
-   - **THOROUGH:** adds detailed stakeholder categories, rationale for quality goal selection, and explicit link to Section 10
-
----
-
-## Step 2 — Generate the Documentation
-
-Once all answers are concrete and complete, produce Section 1 using the template below, adapted to the chosen detail level.
+Produce the section in the arc42 form below. Keep 1.1 as short as possible and
+refer to existing requirements documents instead of copying them.
 
 ```markdown
 # 1. Introduction and Goals
 
 ## 1.1 Requirements Overview
-<!-- LEAN: keep to 5–10 bullet points and one-sentence purpose. ESSENTIAL/THOROUGH: add business context paragraph and references. -->
 
-[1–2 sentence system purpose statement]
+[Short description of the business goals, the driving forces and the essential
+functional requirements. Prose, a bullet list or a tabular use-case overview.]
 
-### Essential Features
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-- [Feature 4]
-- [Feature 5]
+| Use Case | Description |
+| -------- | ----------- |
+| [Name]   | [One line]  |
 
-### Business Context
-<!-- LEAN: omit or one sentence. ESSENTIAL+: full paragraph. -->
-[What business problem is solved? Who benefits? What value is delivered?]
-
-### References
-- [Requirements document / backlog name and link, if provided]
-
----
+Requirements documents: [name, version and location of each document]
 
 ## 1.2 Quality Goals
 
-> Top 3–5 quality requirements of highest importance to major stakeholders.
-> All architectural decisions must support these goals.
-> ⚠️ **Must be reviewed and signed off by the stakeholders named in 1.3 before architecture work begins.**
+[Three to five quality goals for the architecture, ordered by priority, each
+with a concrete scenario.]
 
-| Priority | Quality Goal | Concrete Scenario |
-|:--------:|-------------|-------------------|
-| 1 | [Q42 tag + goal name] | [Measurable scenario with specific numbers] |
-| 2 | [Q42 tag + goal name] | [Measurable scenario with specific numbers] |
-| 3 | [Q42 tag + goal name] | [Measurable scenario with specific numbers] |
-| 4 | [Q42 tag + goal name, if applicable] | [Measurable scenario with specific numbers] |
-| 5 | [Q42 tag + goal name, if applicable] | [Measurable scenario with specific numbers] |
+| Priority | Quality Goal | Scenario                                 |
+| -------- | ------------ | ---------------------------------------- |
+| 1        | [Goal]       | [Concrete situation that shows the goal] |
+| 2        | [Goal]       | [Concrete situation that shows the goal] |
+| 3        | [Goal]       | [Concrete situation that shows the goal] |
 
-<!-- THOROUGH: add a short rationale paragraph explaining why these goals were chosen over others. -->
+The complete quality requirements are in Section 10.
 
-See Section 10 for detailed quality scenarios.
+## 1.3 Stakeholders
 
----
-
-## 1.3 Stakeholder
-
-| Role / Name | Contact | Expectations from Architecture |
-|-------------|---------|--------------------------------|
-| [Role] | [Email / link] | [What they need to understand or decide] |
-| [Role] | [Email / link] | [What they need to understand or decide] |
-
-<!-- THOROUGH: group stakeholders by category (Development, Operations, Management, Business, External). -->
-
-**Quality goal sign-off:** [Name(s) responsible for approving Section 1.2]
+| Role/Name | Contact   | Expectations                                      |
+| --------- | --------- | ------------------------------------------------- |
+| [Role]    | [Contact] | [What they expect from the architecture and docs] |
 ```
 
----
+## Step 3: Review and Iterate
 
-## Step 3 — Review and Iterate
+Check the draft against the arc42 guidance. For every failed item, explain what
+is wrong and how to fix it.
 
-After presenting the draft, work through this checklist. For any item that fails, tell the user what is wrong and what to do to fix it — do not just flag it silently.
+Requirements overview:
 
-**Quality goals (1.2) — most critical:**
-- [ ] 3–5 goals present (3 is ideal; more than 5 is a red flag)
-- [ ] Every goal uses a Q42 property tag
-- [ ] Every goal has a concrete, measurable scenario with specific numbers — if not, ask the user for the metric now
-- [ ] Goals are ordered by priority
-- [ ] Sign-off responsibility is named → if missing, ask who will approve them
+- Is it a compact summary rather than a copy of the requirements? It should
+  balance readability against redundancy with existing documents.
+- Are business goals and the essential use cases visible?
+- Are existing requirements documents referenced with version and location?
 
-**Requirements overview (1.1):**
-- [ ] Stays within 1 page (LEAN) or 2 pages (ESSENTIAL/THOROUGH)
-- [ ] Business value is explained, not just features listed
-- [ ] Focuses on THIS system only — no other systems described
-- [ ] References to existing requirement docs are included if they exist
+Quality goals:
 
-**Stakeholders (1.3):**
-- [ ] All relevant parties are listed — prompt the user if obvious roles are missing (e.g. no ops/DevOps listed for a deployed system)
-- [ ] Each stakeholder has a stated expectation, not just a name
+- Are there at most five goals, ordered by priority?
+- Are they quality goals for the architecture, not project goals?
+- Is every goal concrete, free of buzzwords, and illustrated by a scenario?
+- Are assumptions marked as such when no stakeholder provided the goals?
+- Are the detailed and complete quality requirements deferred to Section 10
+  rather than listed here?
 
-**Cross-section consistency (if other sections exist):**
-- [ ] Quality goals align with any decisions already documented in Section 9
-- [ ] Stakeholders are consistent with communication partners in Section 3
+Stakeholders:
 
-Then ask: **"What would you like to refine or expand?"** and iterate until the user is satisfied.
+- Does the table name roles, persons and their expectations towards the
+  architecture and its documentation, rather than repeating their functional or
+  quality requirements?
+- Are obvious roles missing, such as operations for a deployed system?
 
----
+Cross-section consistency, where the sections exist:
 
-*Based on [docs.arc42.org/section-1](https://docs.arc42.org/section-1/)*
+- Section 4 should state a solution approach for every quality goal in 1.2.
+- Section 10 should reference the goals in 1.2 instead of restating them.
+
+Then ask what the user wants to refine and iterate until they are satisfied.
+
+Based on <https://docs.arc42.org/section-1/> and the arc42 template by Dr. Gernot
+Starke and Dr. Peter Hruschka (CC BY-SA 4.0).

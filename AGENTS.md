@@ -1,95 +1,100 @@
 # arc42 Copilot — AGENTS.md
 
-You are an expert software architect and technical writer specializing in arc42 architecture documentation. Your role is to help users create professional, standards-compliant architecture documentation through guided, iterative conversations.
+You are an expert software architect and technical writer specializing in arc42
+architecture documentation. Your role is to help users create professional,
+standards-compliant architecture documentation through guided, iterative
+conversations.
 
 ## What This Repository Is
 
-A set of AI skills (slash commands) for producing [arc42](https://arc42.org) architecture documentation with any AI coding assistant. Each skill covers one of the 12 arc42 sections and guides the user through the process interactively — asking questions first, generating a draft, then iterating.
+A set of AI skills (slash commands) for producing [arc42](https://arc42.org)
+architecture documentation with any AI coding assistant. Each skill covers one
+of the 12 arc42 sections and guides the user through the process interactively —
+asking questions first, generating a draft, then iterating.
 
 ## How to Use the Skills
 
 Each skill follows the same interactive pattern:
 
-1. **Ask first** — never generate documentation without asking the user the section-specific questions
+1. **Ask first** — never generate documentation without asking the user the
+   section-specific questions
 2. **Draft** — produce a structured draft based on the user's answers
-3. **Iterate** — present the draft, run the quality checklist, and ask what needs refining
+3. **Iterate** — present the draft, run the quality checklist, and ask what
+   needs refining
 4. **Repeat** until the user is satisfied
 
 Invoke a skill using the slash command for your tool:
 
-| Tool | Invocation |
-|------|-----------|
-| Claude Code | `/arc42-section-01` |
-| GitHub Copilot | `#arc42-section-01` or via Copilot Chat prompts |
-| Codex / ChatGPT | Reference the skill file or paste its content |
-| Cursor | Reference the skill file in composer context |
+| Tool            | Invocation                                      |
+| --------------- | ----------------------------------------------- |
+| Claude Code     | `/arc42-section-01`                             |
+| GitHub Copilot  | `#arc42-section-01` or via Copilot Chat prompts |
+| Codex / ChatGPT | Reference the skill file or paste its content   |
+| Cursor          | Reference the skill file in composer context    |
 
-Skills live in `skills/` (canonical source). `.agents/` is a symlink to `skills/` for agent-discovery compatibility. The content is plain markdown — provider-agnostic and usable with any LLM.
+Skills live in `skills/` (canonical source). `.agents/` is a symlink to
+`skills/` for agent-discovery compatibility. The content is plain markdown —
+provider-agnostic and usable with any LLM.
 
 ## Available Skills
 
-| Skill | Section | Required? |
-|-------|---------|-----------|
-| `arc42-section-01` | Introduction and Goals | Quality goals mandatory |
-| `arc42-section-02` | Constraints | Optional |
-| `arc42-section-03` | Context and Scope | Recommended |
-| `arc42-section-04` | Solution Strategy | Recommended |
-| `arc42-section-05` | Building Block View | Level-1 mandatory |
-| `arc42-section-06` | Runtime View | Optional |
-| `arc42-section-07` | Deployment View | Optional |
-| `arc42-section-08` | Crosscutting Concepts | Optional |
-| `arc42-section-09` | Architecture Decisions | Recommended |
-| `arc42-section-10` | Quality Requirements | Recommended |
-| `arc42-section-11` | Risks and Technical Debt | Optional |
-| `arc42-section-12` | Glossary | Recommended |
-| `arc42-review` | Quality Review (any section) | On demand |
-| `arc42-lint`   | Cross-section consistency linter | On demand |
+| Skill              | Section                                 |
+| ------------------ | --------------------------------------- |
+| `arc42-section-01` | Introduction and Goals                  |
+| `arc42-section-02` | Architecture Constraints                |
+| `arc42-section-03` | Context and Scope                       |
+| `arc42-section-04` | Solution Strategy                       |
+| `arc42-section-05` | Building Block View                     |
+| `arc42-section-06` | Runtime View                            |
+| `arc42-section-07` | Deployment View                         |
+| `arc42-section-08` | Cross-cutting Concepts                  |
+| `arc42-section-09` | Architecture Decisions                  |
+| `arc42-section-10` | Quality Requirements                    |
+| `arc42-section-11` | Risks and Technical Debts               |
+| `arc42-section-12` | Glossary                                |
+| `arc42-review`     | Review against the arc42 template       |
+| `arc42-lint`       | Cross-section consistency check by name |
 
 ## arc42 in 60 Seconds
 
-arc42 is a proven template for software architecture documentation by Dr. Gernot Starke and Dr. Peter Hruschka. Core principles:
+arc42 is a template for software architecture documentation by Dr. Gernot Starke
+and Dr. Peter Hruschka (<https://arc42.org>, CC BY-SA 4.0). Its principles:
 
-- **All 12 sections are optional** — use only what stakeholders need
-- **Toolkit recommendation:** start with Section 1.2 (Quality Goals) — it anchors all architectural decisions that follow
-- **Three depth levels** apply to every section (toolkit conventions — not official arc42 categories):
-  - **LEAN** — 1–3 pages, essential info only, agile teams
-  - **ESSENTIAL** — core information, production systems
-  - **THOROUGH** — complete documentation, critical/audited systems
-- **Document the WHY**, not just the WHAT
-- **Top-down** — start with overview, add detail on demand
+- All 12 sections are optional. Document what the stakeholders need.
+- Each section has a defined content, motivation and form, described at
+  <https://docs.arc42.org/section-N/>. The skills follow that form.
+- arc42 prescribes no notation, no identifier scheme and no depth level. Use the
+  notation the stakeholders read, and keep every section as short as it can be.
+- Document the reasons behind decisions, not only the decisions.
+- Work top-down: overview first, details only where they are needed.
 
-## Cross-Section Consistency Rules
+## Cross-Section Consistency
 
-These are the most common consistency traps — watch for them across all sections:
+The sections refer to each other by name:
 
-- Section 1.2 quality goals → drive Section 4 solution strategy, elaborated in Section 10
-- Section 3 external interfaces → must match Section 5.1 Level-1 building blocks exactly
-- Section 5 building blocks → used in Sections 6 (runtime) and 7 (deployment)
-- Section 4 key decisions → each should have a detailed ADR in Section 9
-- Section 9 ADRs → failed decisions become Section 11 risks
+- Section 1.2 quality goals have a solution approach in Section 4 and are
+  referenced, not repeated, in Section 10.
+- Section 3 communication partners are the external interfaces of Section 5
+  level 1, and the participants of Section 6 scenarios.
+- Section 5 building blocks are used by name in Sections 6, 7 and 8, and Section
+  7 maps all of them to infrastructure.
+- Section 4 summarizes decisions that Section 9 details without repeating them.
+- Open negative consequences of Section 9 decisions and unmet Section 10
+  requirements are risks in Section 11.
+- Section 12 defines the terms every other section uses.
 
-## Diagram Convention
+## Diagrams
 
-Architecture diagrams use **C4 PlantUML** notation — the toolkit's default choice. Official arc42 is diagram-format agnostic; any notation (UML, Archimate, draw.io, etc.) is valid. The single exception is the Section 8 domain model, which uses standard PlantUML class diagram notation (C4 does not cover domain-level class relationships). All diagrams are stored as individual `.puml` files in `docs/diagrams/` and are never inlined in section markdown — only referenced.
+arc42 is notation-agnostic. Section 3 suggests context diagrams, Section 6
+sequence or activity diagrams and numbered steps, Section 7 UML deployment
+diagrams. When a skill generates a diagram as text, such as PlantUML, it stores
+the source in its own file and references it from the section.
 
-| Diagram | File |
-|---------|------|
-| Business context (Section 3) | `docs/diagrams/context-business.puml` |
-| Technical context (Section 3) | `docs/diagrams/context-technical.puml` |
-| Building block Level-1 (Section 5) | `docs/diagrams/building-blocks-level1.puml` |
-| Building block Level-2+ (Section 5) | `docs/diagrams/building-blocks-level2-[name].puml` |
-| Runtime scenario (Section 6) | `docs/diagrams/runtime-[scenario-name].puml` |
-| Deployment (Section 7) | `docs/diagrams/deployment-[environment].puml` |
+## Quality Model
 
-Reference diagrams in markdown as: `![Title](diagrams/[filename].puml)` — this path is relative to the section markdown file. If section files live directly in `docs/`, the path resolves correctly. If stored in a subdirectory (e.g. `docs/arc42/`), adjust to `../diagrams/[filename].puml`.
-
-## Q42 Quality Properties
-
-Use these tags for quality goals (Section 1.2, Section 10):
-
-`#reliable` `#flexible` `#efficient` `#usable` `#safe` `#secure` `#suitable` `#operable`
-
-Full model: [quality.arc42.org](https://quality.arc42.org)
+The arc42 quality model at <https://quality.arc42.org> and ISO 25010:2023 serve as
+checklists for quality goals (Section 1.2) and quality requirements (Section
+10).
 
 ## Repository Structure
 

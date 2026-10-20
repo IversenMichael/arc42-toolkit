@@ -1,153 +1,97 @@
 ---
 name: arc42-section-06
-version: 1.0.0
-description: Interactively guides the documentation of arc42 Section 6 (Runtime View). Asks about key dynamic scenarios and involved components before generating C4 PlantUML sequence diagrams or step-by-step descriptions. Iterates until the user is satisfied.
+version: 2.0.0
+description:
+  Interactively guides the documentation of arc42 Section 6 (Runtime View) in
+  the form of the official arc42 template. Asks for a representative selection
+  of architecturally relevant scenarios and the building blocks involved before
+  drafting them in a suitable notation, then iterates until the user is
+  satisfied.
 ---
 
 # arc42 Section 6: Runtime View
 
-You are an expert arc42 architect helping document **Section 6: Runtime View**.
+You help document Section 6 of an arc42 architecture documentation. Follow the
+official template at <https://docs.arc42.org/section-6/>.
 
-This section describes the dynamic behavior of the system — how building blocks cooperate at runtime to fulfill important scenarios. It complements the static structure of Section 5.
+Section 6 describes the concrete behaviour and interactions of the building
+blocks in the form of scenarios from these areas:
 
-**Selection rule:** 3–5 scenarios only. Choose what is architecturally interesting, not what is exhaustive. Every scenario must have a reason for being here.
+- important use cases or features: how do the building blocks execute them?
+- interactions at critical external interfaces: how do the building blocks
+  cooperate with users and neighbouring systems?
+- operation and administration: launch, start-up, stop
+- error and exception scenarios
 
-**Mandatory scenario mix:** Always include at least one happy-path scenario, at least one error or recovery scenario, and at least one scenario that directly demonstrates a quality goal from Section 1.2.
+The main criterion for choosing scenarios is their architectural relevance. A
+representative selection is enough; a large number of scenarios is not the goal.
+Scenarios mainly serve stakeholders who are less willing or able to read the
+static models in Sections 5 and 7.
 
----
+## Step 1: Ask Before Writing
 
-## Step 1 — Ask These Questions First
+Do not draft anything until the questions below are answered.
 
-**Do not generate any documentation yet.** Ask all questions below and wait for the answers.
+First read Section 5 (scenarios refer to its building blocks) and Section 3
+(scenarios refer to its communication partners) if they exist.
 
-**Context check — ask first:**
-- Does Section 5 exist? If yes, retrieve the component names — scenarios may only reference building blocks that exist there.
-- Does Section 3 exist? If yes, retrieve the external actor and system names — scenarios may only reference external participants from there.
-- Does Section 1.2 exist? If yes, retrieve the quality goals — at least one scenario must connect to a quality goal.
+1. Scenario candidates. Go through the four areas above and ask which scenarios
+   are architecturally relevant: they show how an important feature is executed,
+   how a critical external interface is served, how the system starts, stops or
+   is administered, or how an important error is handled.
+2. Selection. Which few scenarios are representative? Drop the rest.
+3. Per scenario: which building blocks from Section 5 and which communication
+   partners from Section 3 take part, in which order do they interact, and what
+   is notable about the interaction? Should the scenario be schematic or
+   detailed? Schematic is the default; detailed scenarios are costly to
+   maintain.
+4. Notation. Which notation do the stakeholders read? arc42 suggests numbered
+   steps in natural language, activity diagrams or flow charts, sequence
+   diagrams, BPMN or event process chains, and state machines.
 
-**Then ask:**
+## Step 2: Draft the Section
 
-1. **Scenario selection** — What are the 3–5 most important runtime scenarios to document? Use these criteria to guide the choice:
-   - The happy path of the system's primary use case
-   - A critical error, timeout, or recovery path
-   - A scenario that illustrates how a key quality goal (e.g. caching for `#efficient`, failover for `#reliable`) is achieved at runtime
-   - A non-obvious or frequently misunderstood interaction
-   - Startup or shutdown sequences if they are architecturally significant
-
-2. **For each scenario, ask:**
-   - What triggers it? (user action, external event, scheduled job, system event)
-   - Which building blocks from Section 5 are involved?
-   - Which external actors or systems from Section 3 participate?
-   - What are the steps in sequence — what does each participant send or return?
-   - What can go wrong at each step, and how is it handled?
-   - Which quality goal from Section 1.2 does this scenario illustrate, if any?
-
-3. **Detail level** — LEAN, ESSENTIAL, or THOROUGH?
-   - **LEAN:** numbered steps only — no diagram
-   - **ESSENTIAL:** numbered steps + C4 PlantUML sequence diagram
-   - **THOROUGH:** full C4 PlantUML diagram including alternative/error flows
-
----
-
-## Step 2 — Generate the Documentation
-
-Once all answers are in, produce Section 6 with one sub-section per scenario. Diagrams go in `docs/diagrams/` as separate `.puml` files. Reference them in the section markdown — never inline the source.
-
-**Runtime scenario diagram file** (ESSENTIAL/THOROUGH, one per scenario) — write to `docs/diagrams/runtime-[scenario-name].puml`. Do not include this source in the section markdown; only the image reference belongs there.
-
-```plantuml
-@startuml runtime-[scenario-name]
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Dynamic.puml
-
-title Runtime: [Scenario Name]
-
-Person_Ext(actor, "Actor", "Description")
-Container(compA, "Component A", "[Technology]", "Responsibility")
-Container(compB, "Component B", "[Technology]", "Responsibility")
-System_Ext(extSystem, "External System", "Description")
-
-Rel(actor, compA, "1. sends request", "[protocol/format]")
-Rel(compA, compB, "2. queries", "[protocol/format]")
-Rel_Back(compA, compB, "3. returns result", "[protocol/format]")
-Rel_Back(actor, compA, "4. responds", "[protocol/format]")
-
-@enduml
-```
+Produce one subsection per scenario in the arc42 form below. Every activity in a
+scenario must be attributed to an existing building block. If you generate a
+diagram as text, such as PlantUML, store it in its own file and reference it
+from the section.
 
 ```markdown
 # 6. Runtime View
 
-## Overview
+## 6.1 [Runtime Scenario 1]
 
-[1 paragraph: Which scenarios are documented, why were they chosen, and what does the set collectively illustrate about the system's dynamic behavior?]
+[Runtime diagram, or a textual description such as a numbered list of steps,
+each naming the building block that performs it.]
 
----
+1. [Partner or building block] [does something] with [building block]
+2. [Building block] [does something]
+3. ...
 
-## 6.1 [Scenario Name — e.g. "User Places Order"]
+[Description of the notable aspects of the interactions between the building
+block instances shown above.]
 
-**Purpose:** [Why document this scenario? What does it illustrate architecturally?]
+## 6.2 [Runtime Scenario 2]
 
-**Trigger:** [What starts this scenario?]
-
-**Participants:** [Components from Section 5 and external actors from Section 3]
-
-**Quality goal illustrated:** [Which goal from Section 1.2, or "none" if this is a structural scenario]
-
-### Sequence
-
-<!-- LEAN: numbered steps only. ESSENTIAL+: include the PlantUML diagram. -->
-
-Steps:
-1. [Actor / Component] sends [request / event / message] to [Component]
-2. [Component] validates [what] and calls [Component]
-3. [Component] fetches [data] from [Component]
-4. [Component] returns [result] to [Component]
-5. [Component] responds to [Actor]
-
-<!-- ESSENTIAL and THOROUGH: also generate the diagram file (see diagram template above Step 2) -->
-
-![Runtime: [Scenario Name]](diagrams/runtime-[scenario-name].puml)
-
-### Error Handling
-
-<!-- Always include for critical paths. LEAN: one sentence per failure mode. THOROUGH: include alt flows in the diagram. -->
-
-| Step | Failure | System Response |
-|------|---------|----------------|
-| [N] | [What can go wrong] | [How the system responds — retry, fallback, error surfaced to user] |
-
----
-
-## 6.2 [Scenario Name — e.g. "Payment Timeout and Retry"]
-
-[Repeat structure for each scenario]
+[Same structure.]
 ```
 
----
+## Step 3: Review and Iterate
 
-## Step 3 — Review and Iterate
+Check the draft against the arc42 guidance. For every failed item, explain what
+is wrong and how to fix it.
 
-After presenting the draft, work through this checklist. For any item that fails, tell the user what is wrong and what to do — do not just flag it silently.
+- Is every scenario architecturally relevant, and is the set a small,
+  representative selection rather than an exhaustive list?
+- Is every activity mapped to a building block that exists in Section 5?
+- Do external participants exist as communication partners in Section 3?
+- Are scenarios schematic unless there is a reason for detail?
+- Does each scenario explain what is notable about the interaction, not only
+  list the steps?
+- Were the four areas considered, so that operation and error scenarios are not
+  forgotten when they matter?
 
-**Scenario set:**
-- [ ] 3–5 scenarios present — not fewer (too thin), not more (too exhaustive)
-- [ ] At least one happy-path scenario → if missing, ask the user which use case is the primary one
-- [ ] At least one error or recovery scenario → if missing, ask what happens when the most critical step fails
-- [ ] At least one scenario connects to a quality goal from Section 1.2 → if missing, ask which goal is best demonstrated at runtime
+Then ask what the user wants to refine and iterate until they are satisfied.
 
-**Per scenario:**
-- [ ] Every component referenced exists in Section 5 → if not, either add it to Section 5 or correct the name
-- [ ] Every external actor or system referenced exists in Section 3 → if not, either add it to Section 3 or correct the name
-- [ ] Trigger is explicit — scenario cannot start without one
-- [ ] Error handling is documented for scenarios on the critical path
-
-**Diagrams (ESSENTIAL/THOROUGH):**
-- [ ] Diagram file follows naming convention `docs/diagrams/runtime-[scenario-name].puml`
-- [ ] Diagram is referenced in the markdown, not inlined
-- [ ] All participants in the diagram match component and actor names from Sections 3 and 5
-
-Then ask: **"What would you like to refine or expand?"** and iterate until the user is satisfied.
-
----
-
-*Based on [docs.arc42.org/section-6](https://docs.arc42.org/section-6/)*
+Based on <https://docs.arc42.org/section-6/> and the arc42 template by Dr. Gernot
+Starke and Dr. Peter Hruschka (CC BY-SA 4.0).

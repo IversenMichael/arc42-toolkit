@@ -1,124 +1,95 @@
 ---
 name: arc42-section-02
-version: 1.0.0
-description: Interactively guides the documentation of arc42 Section 2 (Constraints). Asks about technical, organizational, regulatory, and convention-based boundaries before generating a structured draft. Iterates until the user is satisfied.
+version: 2.0.0
+description:
+  Interactively guides the documentation of arc42 Section 2 (Architecture
+  Constraints) in the form of the official arc42 template. Asks about technical,
+  organizational and political constraints and conventions before drafting, then
+  iterates until the user is satisfied.
 ---
 
-# arc42 Section 2: Constraints
+# arc42 Section 2: Architecture Constraints
 
-You are an expert arc42 architect helping document **Section 2: Constraints**.
+You help document Section 2 of an arc42 architecture documentation. Follow the
+official template at <https://docs.arc42.org/section-2/>.
 
-This section captures the boundaries of architectural freedom — decisions already made that limit your choices. Constraints are non-negotiable. They come from technical, organizational, political, and regulatory sources.
+Section 2 lists every requirement that constrains the architects in their
+freedom of design and implementation decisions, or in decisions about the
+development process. Constraints often go beyond the single system and hold for
+whole organizations. Architects should know exactly where they are free and
+where they must adhere to constraints. Constraints must always be dealt with,
+but they may be negotiable.
 
-**Key distinction:** A constraint requires a business, legal, or organizational change to override. If a purely technical choice could override it, it belongs in Section 9 (Architecture Decisions), not here.
+## Step 1: Ask Before Writing
 
----
+Do not draft anything until the questions below are answered.
 
-## Step 1 — Ask These Questions First
+First check whether Sections 4 (Solution Strategy) and 9 (Architecture
+Decisions) exist. A constraint is given to the architects from outside; a choice
+the architects made themselves is a decision and belongs in Section 4 or 9.
 
-**Do not generate any documentation yet.** Ask all questions below and wait for the answers.
+1. Technical constraints. Mandated hardware, software, operating environments,
+   programming languages, frameworks, middleware, protocols, or existing systems
+   that must be used or integrated.
+2. Organizational and political constraints. Organization and structure of the
+   team, resources, budget, schedule, mandated development process, procurement
+   rules, legal and regulatory obligations, and decisions by management or the
+   parent organization.
+3. Conventions. Programming, versioning, documentation and naming guidelines,
+   architecture or coding standards that must be followed.
+4. For each constraint: What is its background? What are its consequences for
+   the architecture? Is it negotiable, and with whom? Do constraints of other
+   systems in the organization also apply to this one?
 
-**Context check — ask first:**
-- Do Sections 4 (Solution Strategy) or 9 (Architecture Decisions) already exist? If yes, note them — constraints must be consistent with and respected by both sections.
+## Step 2: Draft the Section
 
-**Then ask:**
-
-1. **Technical constraints** — Are there mandated languages, frameworks, platforms, or runtime environments? Required databases, middleware, or protocols? Existing systems that must be integrated with?
-
-2. **Organizational and political constraints** — Team structure limitations (size, skills, locations)? Mandated processes (e.g. SAFe, Scrum)? Budget or timeline constraints that affect architecture? Vendor relationships or contracts? Management or parent-organization technology decisions that are non-negotiable?
-
-3. **Regulatory / compliance constraints** — Legal requirements (GDPR, HIPAA, SOX, PCI-DSS, etc.)? Industry standards to comply with? Audit or certification requirements?
-
-4. **Conventions** — Mandated coding standards, documentation standards, API design rules, or naming conventions that all components must follow?
-
-5. **Detail level** — LEAN, ESSENTIAL, or THOROUGH?
-   - **LEAN:** only constraints with direct architectural impact; omit empty categories
-   - **ESSENTIAL:** all known constraints with reasons; note "none identified" for empty categories
-   - **THOROUGH:** full detail including source, impact on architecture, and link to affected sections
-
-**For each constraint given:** if the reason it cannot be changed is unclear, ask *"What would need to happen for this constraint to be removed?"* — this confirms it is genuinely non-negotiable. If the answer is "we could just decide differently," it is a design decision and belongs in Section 9 instead.
-
----
-
-## Step 2 — Generate the Documentation
-
-Once all answers are in, produce Section 2. Group by category, include only categories with actual content (LEAN) or explicitly note empty ones (ESSENTIAL/THOROUGH).
+Produce the section in the arc42 form: simple tables of constraints with
+explanations. Subdivide into the three categories only when it helps; a single
+table is fine for a few constraints. Omit empty categories.
 
 ```markdown
-# 2. Constraints
-
-## Overview
-[1–2 sentences: What types of constraints apply and how significantly do they restrict architectural choices?]
-
----
+# 2. Architecture Constraints
 
 ## 2.1 Technical Constraints
 
-| Constraint | Background / Reason |
-|-----------|---------------------|
-| [e.g. Must use Java 21] | [e.g. Corporate standard, all teams must align] |
-| [e.g. PostgreSQL as database] | [e.g. Existing license and DBA expertise] |
-| [e.g. Must run on Azure] | [e.g. Enterprise cloud contract, cannot change] |
-
-<!-- LEAN: only include if there are technical constraints. THOROUGH: add an "Architectural Impact" column. -->
-
----
+| Constraint   | Explanation                                          |
+| ------------ | ---------------------------------------------------- |
+| [Constraint] | [Background, consequences, whether it is negotiable] |
 
 ## 2.2 Organizational and Political Constraints
 
-| Constraint | Background / Reason |
-|-----------|---------------------|
-| [e.g. Team of 5 developers] | [e.g. Fixed headcount approved by management] |
-| [e.g. Release every 2 weeks] | [e.g. Sprint cadence mandated by product org] |
-| [e.g. Must reuse existing CI/CD pipeline] | [e.g. Ops team policy, no budget for new tooling] |
+| Constraint   | Explanation   |
+| ------------ | ------------- |
+| [Constraint] | [Explanation] |
 
-<!-- LEAN: only include if there are organizational/political constraints. -->
+## 2.3 Conventions
 
----
-
-## 2.3 Regulatory and Compliance Constraints
-
-| Constraint | Background / Reason |
-|-----------|---------------------|
-| [e.g. GDPR compliance required] | [e.g. European user base, legal obligation] |
-| [e.g. Data must stay within EU] | [e.g. GDPR data residency requirement] |
-
-<!-- LEAN: omit if none. ESSENTIAL/THOROUGH: explicitly state "None identified at this time" if empty. -->
-
----
-
-## 2.4 Conventions
-
-| Convention | Background / Reason |
-|-----------|---------------------|
-| [e.g. REST APIs must follow OpenAPI 3.0] | [e.g. API gateway requirement] |
-| [e.g. All services must emit structured JSON logs] | [e.g. Central observability platform] |
-
-<!-- LEAN: omit if none. -->
+| Convention   | Explanation   |
+| ------------ | ------------- |
+| [Convention] | [Explanation] |
 ```
 
----
+## Step 3: Review and Iterate
 
-## Step 3 — Review and Iterate
+Check the draft against the arc42 guidance. For every failed item, explain what
+is wrong and how to fix it.
 
-After presenting the draft, work through this checklist. For any item that fails, tell the user what is wrong and what to do — do not just flag it silently.
+- Does every constraint have an explanation of its background and its
+  consequences for the architecture?
+- Is every entry really a constraint imposed from outside? Entries the
+  architects chose themselves belong in Section 4 or Section 9.
+- Is every entry a constraint rather than a quality goal? Statements such as
+  "must be secure" belong in Section 1.2 or Section 10.
+- Are organizational constraints and conventions covered, not only technical
+  ones?
+- Is it stated which constraints are negotiable?
 
-**Constraint validity:**
-- [ ] Every constraint has a reason explaining why it cannot be changed → if missing, ask the user to provide one
-- [ ] No constraint is actually a design decision → apply the test: *"Does overriding this require a business, legal, or organizational change?"* If no, move it to Section 9 and tell the user which ADR it should become
-- [ ] No constraint is actually a quality goal (e.g. "must be secure") → those belong in Section 1.2
+Cross-section consistency, where the sections exist:
 
-**Completeness:**
-- [ ] All four categories have been considered — prompt the user if any seem suspiciously absent (e.g. no regulatory constraints for a system handling personal data)
-- [ ] ESSENTIAL/THOROUGH: empty categories explicitly note "None identified" rather than being silently omitted
+- Section 4 and Section 9 must not contradict the constraints listed here.
+- Sections 5 and 7 must be compatible with the technical constraints.
 
-**Cross-section consistency (if other sections exist):**
-- [ ] Section 4 solution strategy respects all constraints listed here — flag any conflict
-- [ ] Section 9 ADRs do not contradict constraints — flag any overlap where a constraint should become an ADR or vice versa
-- [ ] Section 5 building blocks and Section 7 deployment are compatible with technical constraints
+Then ask what the user wants to refine and iterate until they are satisfied.
 
-Then ask: **"What would you like to refine or expand?"** and iterate until the user is satisfied.
-
----
-
-*Based on [docs.arc42.org/section-2](https://docs.arc42.org/section-2/)*
+Based on <https://docs.arc42.org/section-2/> and the arc42 template by Dr. Gernot
+Starke and Dr. Peter Hruschka (CC BY-SA 4.0).
